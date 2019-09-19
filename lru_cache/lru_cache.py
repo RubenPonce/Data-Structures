@@ -34,7 +34,6 @@ class LRUCache:
       node = self.storage[key]
       self.linked_list.delete(node[1])
       self.linked_list.add_to_head([key, node[0]])
-      self.node_count += 1
       return node[0]
       
 
@@ -50,18 +49,22 @@ class LRUCache:
   """
   def set(self, key, value):
     
-    if self.limit is self.node_count:
-      #remove old node
-      self.linked_list.remove_from_tail()
-      del self.storage[self.linked_list.tail.value[0]]
-      self.node_count -= 1
+
+
     if key in self.storage:
       #node_count stays the same because nothing was deleted
       self.linked_list.delete(self.storage[key][1])
       self.linked_list.add_to_head([key, value])
       self.storage[key] = [value, self.linked_list.head]
-      
       return
+      
+    if self.limit is self.node_count:
+      #remove old node
+      tail = self.linked_list.tail
+      self.linked_list.remove_from_tail()
+      del self.storage[tail.value[0]]
+      self.node_count -= 1
+    
       
 
     
